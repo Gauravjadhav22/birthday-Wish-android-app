@@ -1,5 +1,6 @@
 package com.example.birthdayremainder
 
+import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
@@ -8,28 +9,37 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Toast
+import android.widget.*
 import com.android.volley.AuthFailureError
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONObject
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.HashMap
 
 class AddBirthday : AppCompatActivity() {
+    private lateinit var btnDatePicker:Button
+    private lateinit var theDate:String
+    private var year = 0
+    private var month = 0
+    private var day = 0
+    private lateinit var calendar: Calendar
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_birthday)
         val addbtn: Button = findViewById(R.id.Add_button)
         addbtn.setOnClickListener{
 
+
+
         if (checkForInternet(this)) {
 
             val name = findViewById<EditText>(R.id.fname).text.toString()
             val contact = findViewById<EditText>(R.id.mono).text.toString()
-            val dob = findViewById<EditText>(R.id.dob).text.toString()
 
 
             val url = "https://birthday-remainder-nodejs.herokuapp.com/api/v1/getbirthday"
@@ -56,7 +66,7 @@ class AddBirthday : AppCompatActivity() {
                 override fun getBody(): ByteArray {
                     val params2 = HashMap<String, String>()
                     params2.put ("name", name)
-                    params2.put("dob", dob)
+                    params2.put("dob", theDate)
                     params2.put("contact", contact)
 
                     return JSONObject(params2 as Map<*, *>).toString().toByteArray()
@@ -74,8 +84,29 @@ class AddBirthday : AppCompatActivity() {
         }
 
 
+        btnDatePicker=findViewById(R.id.date)
+
+
+        calendar = Calendar.getInstance()
+        btnDatePicker.setOnClickListener{
+
+            val dialog = DatePickerDialog(this, { _, year, month, day_of_month ->
+                calendar[Calendar.YEAR] = year
+                calendar[Calendar.MONTH] = month
+                calendar[Calendar.DAY_OF_MONTH] = day_of_month
+                val myFormat = "dd-MM-yyyy"
+                val sdf = SimpleDateFormat(myFormat,Locale.UK)
+                theDate= sdf.format(calendar.time).toString()
+            }, calendar[Calendar.YEAR], calendar[Calendar.MONTH], calendar[Calendar.DAY_OF_MONTH])
+            calendar.add(Calendar.YEAR, 0)
+            dialog.datePicker.maxDate = calendar.timeInMillis
+            dialog.show()
+
+        }
+
 
     }
+
     private fun checkForInternet(context: Context): Boolean {
 
 

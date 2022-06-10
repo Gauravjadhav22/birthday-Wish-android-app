@@ -45,7 +45,21 @@
         android:textColor="@color/black"
 
         />
-
-
+<androidx.appcompat.widget.AppCompatTextView
+    android:id="@+id/sndmsg"
+    android:layout_width="150dp"
+    android:layout_height="wrap_content"
+    android:paddingTop="14dp"
+    android:paddingBottom="14dp"
+    android:paddingRight="14dp"
+    android:paddingLeft="14dp"
+    android:textAlignment="center"
+    android:textColor="@color/white"
+    android:padding="3dp"
+    android:textSize="18dp"
+    android:background="@color/green3"
+    android:text="send message"
+    android:layout_marginTop="5dp"
+    />
 
 </LinearLayout>
